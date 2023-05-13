@@ -1,122 +1,58 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
-class Drawing{
-    static char[][] createCanvas(){
-        char[][] emptyCanvas = new char[10][5];
-        for (int j = 0; j < 5; j++){
-            for (int i = 0; i < 10; i++){
+public class Drawing{
+    // creates an empty canvas that takes in a give amount of rows and columns
+    public static char[][] createCanvas(int column, int row){
+        char[][] emptyCanvas = new char[column][row];
+        for (int j = 0; j < row; j++){
+            for (int i = 0; i < column; i++){
                 emptyCanvas[i][j] = ' ';
             }
         }
-        for (int i = 1; i < 5; i++){
+        for (int i = 1; i < row; i++){
             emptyCanvas[0][i] = '|';
-            emptyCanvas[9][i] = '|';
+            emptyCanvas[column - 1][i] = '|';
         }
-        for (int i = 1; i < 9; i++){
+        for (int i = 1; i < column; i++){
             emptyCanvas[i][0] = '=';
-            emptyCanvas[i][4] = '=';
+            emptyCanvas[i][row - 1] = '=';
         }
-        emptyCanvas[0][4] = '+';
+        emptyCanvas[0][row - 1] = '+';
         emptyCanvas[0][0] = '+';
-        emptyCanvas[9][0] = '+';
-        emptyCanvas[9][4] = '+';
+        emptyCanvas[column - 1][0] = '+';
+        emptyCanvas[column - 1][row - 1] = '+';
         return emptyCanvas;
     }
-
-    static char[][] addCharacter(char[][] canvas, char character, int[] coordinates){
-        canvas[coordinates[0]][coordinates[1]] = character;
+    // adds character to the canvas at the coordinates provided
+    public static char[][] addCharacter(char[][] canvas, char character, int coordinate1, int coordinate2){
+        canvas[coordinate1][canvas[0].length - coordinate2 - 1] = character; // since the rows increase up in printed out canvas, we have subtract the y/row/coordinate2 from the total # of rows.
         return canvas;
     
     }  
-
-    static void printCanvas(char[][] canvas){
+    // Prints out the canvas
+    public static void printCanvas(char[][] canvas){
         System.out.println("Canvas:");
-        for (int j = 0; j < 5; j++){
-            System.out.print(4 - j);
-            for (int i = 0; i < 10; i++){
+        int row = canvas[0].length;
+        int column = canvas.length;
+        for (int j = 0; j < row; j++){
+            System.out.print(row - 1 - j);
+            for (int i = 0; i < column; i++){
                 System.out.print(canvas[i][j]);
             }
             System.out.println("");
         }
         System.out.print(" ");
-        for (int k = 0; k < 10; k++){
+        for (int k = 0; k < column; k++){
             System.out.print(k);
         }
         System.out.println("");
     } 
-
-    static boolean rangeCheck(int[] coordinates){
-        boolean passable = false;
-        if (!(coordinates[0] < 9)){
-            System.out.println("The x coordinate you entered is too big");
-        } else if (!(coordinates[0] > 0)){
-            System.out.println("The x coordinate you entered is too small");
-        } else {
-            if (!(coordinates[1] < 4)){
-                System.out.println("The y Coordinate you entered was too big");
-            } else if (!(coordinates[1] > 0)){
-                System.out.println("The y Coordinate you entered was too small");
-            } else { 
-                passable = true;
-                return passable;
-            }
-        }
-        return passable;
-    }
-
-    static int[] getCoordinates(){
-        Scanner userInput = new Scanner(System.in);
-        boolean passable = false;
-        int xCoord = 0;
-        int yCoord = 0;
-        int[] coordinates = {xCoord, yCoord};
-        while (passable == false){
-            System.out.println("What is the x coordinate of the space you want to edit?(1-8)");
-            coordinates[0] = userInput.nextInt();
-            System.out.println("What is the y coordinate of the space you want to edit?(1-3)");
-            userInput.nextLine();
-            coordinates[1] = userInput.nextInt();
-            passable = rangeCheck(coordinates);
-        }
-        return coordinates;
-    }
     
     public static void main(String[] args){
-        char character;
-        String str1;
-        int[] coordinates;
-        Scanner userInput = new Scanner(System.in);
-        System.out.println("This is your empty canvas.");
-        char[][] canvas = createCanvas();
-        Drawing.printCanvas(canvas);
-        System.out.println("Would you like to 'add' a character, 'erase' a character, or 'clear' a new canvas? (Enter 'exit' to leave)");
-        String option = userInput.next();
-        while (!(option.equals("exit"))){
-            if (option.equals("add")){
-                coordinates = getCoordinates();
-                str1 = String.format("What would you like to put in (%s, %s) \n", coordinates[0], coordinates[1]);
-                System.out.println(str1);
-                character = userInput.next().charAt(0);
-                canvas = Drawing.addCharacter(canvas, character, coordinates);
-                Drawing.printCanvas(canvas);
-                System.out.println("Would you like to 'add' a character, 'erase' a character, or 'clear' a new canvas? (Enter 'exit' to leave)");
-                option = userInput.next();
-            } else if (option.equals("erase")){
-                coordinates = getCoordinates();
-                character = ' ';
-                canvas = Drawing.addCharacter(canvas, character, coordinates);
-                Drawing.printCanvas(canvas);
-                System.out.println("Would you like to 'add' a character, 'erase' a character, or 'clear' a new canvas? (Enter 'exit' to leave)");
-                option = userInput.next();
-            } else if (option.equals("clear")){
-                canvas = createCanvas();
-                Drawing.printCanvas(canvas);
-                System.out.println("Would you like to 'add' a character, 'erase' a character, or 'clear' thge whole canvas? (Enter 'exit' to leave)");
-                option = userInput.next();
-            }
-        }
-        userInput.close();
+        char[][] canvas = createCanvas(10,5);
+        addCharacter(canvas, ':', 4, 3);
+        addCharacter(canvas, 'O', 5, 3);
+        printCanvas(canvas);
     }
 }
     
